@@ -135,10 +135,10 @@ As in the previous cases, if one or both of \verb+--tips_version+ and \verb+--si
 \subsection{Simulation directory structure}
 
 \begin{figure}
-    \centering
-    \includegraphics{}
-    \caption{Caption}
-    \label{fig:my_label}
+\centering
+\includegraphics[scale=0.35]{figures/TIPS_usage-sir_runner_dir_structure.png}
+\caption{Schema of directory structure for a simulation generated with the \texttt{SIR\_SpectroSim\_Runner} code.}
+\label{fig:sim_dir_tree}
 \end{figure}
 
 The directory created for the simulation will have the following naming pattern
@@ -147,4 +147,4 @@ The directory created for the simulation will have the following naming pattern
 <SimulationID>_YY-mm-ddTHH-MM-SS
 \end{verbatim}
 
-where \verb+<SimulationID>+ is the entry specified in the JSON input file, and \verb+YY-mm-ddTHH-MM-SS+ is the date-time string, with 4-digits year format.
+where \verb+<SimulationID>+ is the entry specified in the JSON input file, and \verb+YY-mm-ddTHH-MM-SS+ is the date-time string, with 4-digits year format. Under this directory there will be as many sub-directories named \verb+frame_?+ as it is specified via the \verb+--nframes+ parameter of the main program \verb+launch_simsir+. Essentially a frame corresponds to a dither of the telescope. Each of these \verb+frame+ directories contains an XML file named \verb+outputNIS_frame_?.xml+ which contains the name of the output FITS file for that given dither. The output FITS frame is located into the sub-directory \verb+data+
