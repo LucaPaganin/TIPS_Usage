@@ -28,9 +28,25 @@ This file is structured as a nested python dictionary. It is important \textbf{t
 
 Here we provide a description of each entry of the file.
 
-\paragraph{\texttt{SimulationID}}
+\paragraph{\texttt{SimulationID}} A string with the ID of the simulation, which will be used to name the directory of the simulation.
 
+\paragraph{\texttt{processing\_steps}} a dictionary of boolean switches for the detector effects.
 
+\paragraph{\texttt{keyval\_params}} another dictionary of boolean switches for other instrumental effects, which are not included in the previous entry. This distinction is made by TIPS itself, so it has been adopted for simplicity.
+
+\paragraph{\texttt{flags}} a dictionary of lists, representing the flags to pass to each of the three main TIPS programs. Here the only physically relevant flag is the \verb+no_simspc+ flag for the \verb+EuclidNisSplit+ program. This flag forces TIPS to use the input spectra provided by the user in the \verb+SpectraFitsFile+, since by default the code generates the spectra of the sources automatically according to template Spectral Energy Densities (SEDs).
+
+\paragraph{\texttt{catalogs}} These are the catalogs and spectra fits files described in \secref{subsubsec:catalogs_spectra_fits}, to be written in the TU XML file.
+
+\paragraph{\texttt{source\_dir}} The directory containing all the input files. Refer to \secref{subsec:source_directory} for a description of the structure of this directory.
+
+\paragraph{\texttt{input\_xml\_files}} The paths, relative to the \verb+source_dir+, of the TIPS XML input files to be used in the simulation.
+
+\paragraph{\texttt{grism\_sequence}} A list of four pairs, one per dither, where the i-th pair stores the grism to be used for the i-th along with the tilt, expressed in degrees.
+
+\paragraph{\texttt{dithering\_offsets}} A list of four pairs, one per dither, each storing the coordinate offsets $\Delta$RA and $\Delta$DEC of each dither, w.r.t. the telescope pointing coordinates specified in the \verb+DpdNisInputConfiguration+ XML file. 
+
+\paragraph{\texttt{SpectralOrders}} A string containing the spectral orders to be simulated, represented by capital letters delimited with whitespaces.
 
 \subsection{Input files directory structure}\label{subsec:source_directory}
 
@@ -48,7 +64,7 @@ The \verb+source_dir+ entry of the JSON file points to the directory storing all
 \end{center}
 
 where you can find all the data that are needed to run the simulations. Simply do an \verb+rsync+ from there to a directory of your local machine, and you are done.
-\textbf{N.B.:} the size of this directory is about 20 GB.
+\textbf{N.B.:} the size of this directory is about 23 GB.
 
 \subsection{Installation}
 The installation of the code is divided in three steps
@@ -89,7 +105,7 @@ In order to trigger this mode you have to provide the flag parameter \verb+--onl
 \begin{verbatim}
 E-Run SIR_SpectroSimRunner launch_simsir 
 --only_sim --json_input /path/to/json --tips_version 4.6.8
---save_sim_midfiles
+--save_sim_midfiles --nframes 1
 --log-file /path/to/logfile
 \end{verbatim}
 
@@ -100,7 +116,7 @@ An example call in this case is
 \begin{verbatim}
 E-Run SIR_SpectroSimRunner launch_simsir 
 --only_sir --sir_workdir /path/to/sir/workdir
---sir_pipeline_version 1.0.0
+--sir_pipeline_version 1.0.0  --nframes 1
 --log-file /path/to/logfile
 \end{verbatim}
 
@@ -111,9 +127,24 @@ This mode is the default, and it is triggered without passing any particular fla
 E-Run SIR_SpectroSim_Runner launch_simsir 
 --json_input /path/to/json
 --tips_version 4.6.8 --sir_pipeline_version 1.0.0
---save_sim_midfiles --log-file /path/to/logfile
+ --nframes 1 --save_sim_midfiles --log-file /path/to/logfile
 \end{verbatim}
 
 As in the previous cases, if one or both of \verb+--tips_version+ and \verb+--sir_pipeline_version+ parameters are not passed, the code will try to run local installed versions of TIPS and SIR Pipeline which happen to be into \verb+$HOME/Work/Projects+.
 
+\subsection{Simulation directory structure}
 
+\begin{figure}
+    \centering
+    \includegraphics{}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+The directory created for the simulation will have the following naming pattern
+
+\begin{verbatim}
+<SimulationID>_YY-mm-ddTHH-MM-SS
+\end{verbatim}
+
+where \verb+<SimulationID>+ is the entry specified in the JSON input file, and \verb+YY-mm-ddTHH-MM-SS+ is the date-time string, with 4-digits year format.
