@@ -17,7 +17,7 @@ The code \verb+SIR_SpectroSim_Runner+ was born with the aim to automate the runn
 \end{itemize}
 
 The software requires a \verb+JSON+ input file, described in \secref{subsec:input_JSON} with all these information, and takes care of setting up the workspace and managing the workflow for running TIPS which is illustrated in \figref{fig:TIPS_workflow}. After some time it became necessary also to have a way to launch also the SIR data reduction Pipeline on the results of the simulation, and therefore this feature was added to the code.\\
-\textbf{IMPORTANT}: up to now the code works with \verb+SIM_TIPS_Simulator+ version \verb+4.6.8+ and \verb+SIR_Pipeline+ version \verb+1.0.0+.
+\textbf{N.B.:} up to now the code works on LODEEN (or DOCKEEN) 2.1.2 with \verb+SIM_TIPS_Simulator+ version \verb+4.6.8+ and \verb+SIR_Pipeline+ version \verb+1.0.0+.
 
 \subsection{Input JSON file}\label{subsec:input_JSON}
 This file is structured as a nested python dictionary. It is important \textbf{to not modify any of the dictionary keys}. You can find a template of this JSON file into the \verb+SIR_SpectroSim_Runner+ repository, looking into
@@ -136,7 +136,7 @@ As in the previous cases, if one or both of \verb+--tips_version+ and \verb+--si
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.35]{figures/TIPS_usage-sir_runner_dir_structure.png}
+\includegraphics[scale=0.325]{figures/TIPS_usage-sir_runner_dir_structure.png}
 \caption{Schema of directory structure for a simulation generated with the \texttt{SIR\_SpectroSim\_Runner} code.}
 \label{fig:sim_dir_tree}
 \end{figure}
@@ -147,4 +147,4 @@ The directory created for the simulation will have the following naming pattern
 <SimulationID>_YY-mm-ddTHH-MM-SS
 \end{verbatim}
 
-where \verb+<SimulationID>+ is the entry specified in the JSON input file, and the rest is the date-time string, with 4-digits year format. Under this directory there will be as many sub-directories named \verb+frame_?+ as it is specified via the \verb+--nframes+ parameter of the main program \verb+launch_simsir+. Essentially a frame corresponds to a dither of the telescope. Each of these \verb+frame+ directories contains an XML file named \verb+outputNIS_frame_?.xml+ which contains the name of the output FITS file for that given dither. The output FITS frame is located into the sub-directory \verb+data+ colored by orange in \figref{fig:sim_dir_tree}.
+where \verb+<SimulationID>+ is the entry specified in the JSON input file, and the rest is the date-time string, with 4-digits year format. Under this directory there will be as many sub-directories named \verb+frame_?+ \footnote{Essentially a frame corresponds to a dither of the telescope.} as it is specified via the \verb+--nframes+ parameter of the main program \verb+launch_simsir+. Each of these \verb+frame+ directories contains the DpdNisOutput XML file named \verb+outputNIS_frame_?.xml+ which contains the name of the output FITS file for that given dither. Moreover each frame directory contains the specific DpdNisInputConfiguration XML file for that particular dither. The output FITS files of the various frames are located into the sub-directory \verb+data+ as it showed on the right of \figref{fig:sim_dir_tree}. The input files used for the simulation are stored into the sub-directory \verb+SIM_input_files+, which also contains a copy of the input JSON file provided for the run of \verb+launch_simsir+.
