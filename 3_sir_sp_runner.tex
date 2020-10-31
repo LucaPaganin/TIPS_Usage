@@ -6,6 +6,17 @@ Link to the gitlab repository
 \hypertarget{url:sir_runner_gitlab}{\url{https://gitlab.euclid-sgs.uk/lpagan01/SIR_SpectroSim_Runner}}
 \end{center}
 
+\subsection{Version and compatibility}
+
+The latest tagged version of the code, i.e. \verb+TIPS_4.6.8_SIR_1.0.0+ works on \verb+LODEEN 2.1.2+ on \verb+EDEN-2.0+, with the following versions of the relevant codes: 
+
+\begin{itemize}
+\item \verb+SIM_TIPS_Simulator 4.6.8+
+\item \verb+SIR_Pipeline 1.0.0+
+\end{itemize}
+
+ Additional information can be found in the description of the above mentioned tagged release on the gitlab.
+
 \subsection{Overview}
 
 The code \verb+SIR_SpectroSim_Runner+ was born with the aim to automate the running of TIPS in a customized way, allowing the user to choose in an \emph{easy} way:
@@ -16,15 +27,14 @@ The code \verb+SIR_SpectroSim_Runner+ was born with the aim to automate the runn
 \item the set of input XML files for TIPS.
 \end{itemize}
 
-The software requires a \verb+JSON+ input file, described in \secref{subsec:input_JSON} with all these information, and takes care of setting up the workspace and managing the workflow for running TIPS which is illustrated in \figref{fig:TIPS_workflow}. After some time it became necessary also to have a way to launch also the SIR data reduction Pipeline on the results of the simulation, and therefore this feature was added to the code.\\
-\textbf{N.B.:} up to now the code works on LODEEN (or DOCKEEN) 2.1.2 with \verb+SIM_TIPS_Simulator+ version \verb+4.6.8+ and \verb+SIR_Pipeline+ version \verb+1.0.0+.
+The software requires a \verb+JSON+ input file, described in \secref{subsec:input_JSON} with all these information, and takes care of setting up the workspace and managing the workflow for running TIPS which is illustrated in \figref{fig:TIPS_workflow}. After some time it became necessary also to have a way to launch also the SIR data reduction Pipeline on the results of the simulation, and therefore this feature was added to the code.
 
 \subsection{Input JSON file}\label{subsec:input_JSON}
 This file is structured as a nested python dictionary. It is important \textbf{to not modify any of the dictionary keys}. You can find a template of this JSON file into the \verb+SIR_SpectroSim_Runner+ repository, looking into
 
-\begin{center}
-\verb+SIR_SpectroSim_Runner/SimulationManager/auxdir/json_templates/testsim.json+
-\end{center}
+\begin{verbatim}
+SimulationManager/auxdir/json_templates/testsim.json
+\end{verbatim}
 
 Here we provide a description of each entry of the file.
 
@@ -44,7 +54,7 @@ Here we provide a description of each entry of the file.
 
 \paragraph{\texttt{grism\_sequence}} A list of four pairs, one per dither, where the i-th pair stores the grism to be used for the i-th along with the tilt, expressed in degrees.
 
-\paragraph{\texttt{dithering\_offsets}} A list of four pairs, one per dither, each storing the coordinate offsets $\Delta$RA and $\Delta$DEC of each dither, w.r.t. the telescope pointing coordinates specified in the \verb+DpdNisInputConfiguration+ XML file. 
+\paragraph{\texttt{dithering\_offsets}} A list of four pairs, one per dither, each storing the coordinate offsets $\Delta$RA and $\Delta$DEC of each dither w.r.t. the telescope pointing coordinates specified in the \verb+DpdNisInputConfiguration+ XML file. 
 
 \paragraph{\texttt{SpectralOrders}} A string containing the spectral orders to be simulated, represented by capital letters delimited with whitespaces.
 
@@ -121,7 +131,7 @@ E-Run SIR_SpectroSimRunner launch_simsir
 \end{verbatim}
 
 \paragraph{SIM + SIR}
-This mode is the default, and it is triggered without passing any particular flag. It goes without saying that in this case the code will run a simulation TIPS and then the SIR Pipeline on the resulting simulation. The mandatory input in this case is the same as in the \verb+only_sim+ mode, i.e. the path to the JSON input file. An example call is
+This mode is the default, and it is triggered without passing any particular flag. It goes without saying that in this case the code will run TIPS and then the SIR Pipeline on the resulting simulation. The mandatory input in this case is the same as in the \verb+only_sim+ mode, i.e. the path to the JSON input file. An example call is
 
 \begin{verbatim}
 E-Run SIR_SpectroSim_Runner launch_simsir 
@@ -130,14 +140,14 @@ E-Run SIR_SpectroSim_Runner launch_simsir
  --nframes 1 --save_sim_midfiles --log-file /path/to/logfile
 \end{verbatim}
 
-As in the previous cases, if one or both of \verb+--tips_version+ and \verb+--sir_pipeline_version+ parameters are not passed, the code will try to run local installed versions of TIPS and SIR Pipeline which happen to be into \verb+$HOME/Work/Projects+.
+If one or both of \verb+--tips_version+ and \verb+--sir_pipeline_version+ parameters are not passed, the code will try to run local installed versions of TIPS and SIR Pipeline which happen to be into \verb+$HOME/Work/Projects+.
 
 \subsection{Simulation directory structure}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.325]{figures/TIPS_usage-sir_runner_dir_structure.png}
-\caption{Schema of directory structure for a simulation generated with the \texttt{SIR\_SpectroSim\_Runner} code.}
+\caption{Schema of directory structure for a simulation generated with the \texttt{SIR\_SpectroSim\_Runner} code in the \texttt{only\_sim} mode.}
 \label{fig:sim_dir_tree}
 \end{figure}
 
@@ -147,4 +157,4 @@ The directory created for the simulation will have the following naming pattern
 <SimulationID>_YY-mm-ddTHH-MM-SS
 \end{verbatim}
 
-where \verb+<SimulationID>+ is the entry specified in the JSON input file, and the rest is the date-time string, with 4-digits year format. Under this directory there will be as many sub-directories named \verb+frame_?+ \footnote{Essentially a frame corresponds to a dither of the telescope.} as it is specified via the \verb+--nframes+ parameter of the main program \verb+launch_simsir+. Each of these \verb+frame+ directories contains the DpdNisOutput XML file named \verb+outputNIS_frame_?.xml+ which contains the name of the output FITS file for that given dither. Moreover each frame directory contains the specific DpdNisInputConfiguration XML file for that particular dither. The output FITS files of the various frames are located into the sub-directory \verb+data+ as it showed on the right of \figref{fig:sim_dir_tree}. The input files used for the simulation are stored into the sub-directory \verb+SIM_input_files+, which also contains a copy of the input JSON file provided for the run of \verb+launch_simsir+.
+where \verb+<SimulationID>+ is the entry specified in the JSON input file, and the rest is the date-time string, with 4-digits year format. Under this directory there will be as many sub-directories named \verb+frame_?+ as it is specified via the \verb+--nframes+ parameter of the main program \verb+launch_simsir+. Each of these frame \footnote{Essentially a frame corresponds to a dither of the telescope.} directories contains the DpdNisOutput XML file named \verb+outputNIS_frame_?.xml+ which contains the name of the output FITS file for that given dither. Moreover each frame directory contains the specific DpdNisInputConfiguration XML file for that particular dither. The output FITS files of the various frames are located into the sub-directory \verb+data+ as it showed on the right of \figref{fig:sim_dir_tree}. The input files used for the simulation are stored into the sub-directory \verb+SIM_input_files+, which also contains a copy of the input JSON file provided for the run of \verb+launch_simsir+.

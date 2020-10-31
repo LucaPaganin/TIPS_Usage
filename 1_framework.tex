@@ -1,6 +1,6 @@
 \section{Framework}\label{sec:framework}
 \subsection{General description}
-In Euclid code development and running has to be done in a specific framework, which is called EDEN (Euclid Development ENvironment). This environment is realized with a virtual machine, named LODEEN, which is maintained and versioned by the Euclid System Team. Essentially it is a CentOS machine, with also a Docker image version named DOCKEEN. The pre-defined working area on LODEEN is \verb+$HOME/WorkProjects+, where all the local version of the codes must be installed to be used. Tagged official versions of Euclid codes are available at the path specified by the environment variable \verb+EUCLIDPROJECTPATH+.
+In Euclid code development and running has to be done in a specific framework, which is called EDEN (Euclid Development ENvironment). This environment is realized with a virtual machine, named LODEEN, which is maintained and versioned by the Euclid System Team. Essentially it is a CentOS machine, with also a Docker image version named DOCKEEN. The pre-defined working area on LODEEN is \verb+$HOME/WorkProjects+, where all the local version of the codes must be installed to be used. Tagged official versions of Euclid codes are available at the path specified by the environment variable \verb+EUCLIDPROJECTPATH+. The latest released version of LODEEN is \verb+2.1.2+, where the user can choose if working on two different versions of the EDEN environment, i.e. \verb+EDEN-2.0+ and \verb+EDEN-2.1+. Since when a new version of EDEN is released, all the new official Euclid codes will be released to run on this new version of the environment.
 
 \paragraph{Useful links}
 \begin{itemize}
@@ -25,17 +25,11 @@ The official tool for running Euclid codes is \verb+E-Run+, which is also aliase
 Here the \verb+<parameters>+ argument should contain all the command line parameters which would be normally passed to the specified \verb+<main>+ program which is executed. In particular TIPS (project \verb+SIM_TIPS_Simulator+) main programs have command line parameters that are specified with the \verb+argparse+ module. Each parameter is defined by a keyword and it is assigned to a value, with the syntax \verb+--<keyword> <value>+. A practical example is
 
 \begin{verbatim}
-E-Run SIM_TIPS_Simulator 4.6.8 EuclidNisSplit
+E-Run SIM_TIPS_Simulator 4.6.8 EuclidNisSplit 
 --workdir /path/to/workdir 
---inputNIS example_inputNIS.xml 
---mdb example_MDB.xml 
---starcat example_STARCAT.xml
---galcat example_GALCAT.xml  
+--inputNIS example_inputNIS.xml --mdb example_MDB.xml 
+--starcat example_STARCAT.xml --galcat example_GALCAT.xml 
 --catalogsNIS example_TU.xml
 \end{verbatim}
 
-The \verb+<project_version>+ argument (here \verb+4.6.8+) is optional. If it is passed, the \verb+E-Run+ command will look for that version of the requested project. In the above example we are therefore requesting to run version \verb+4.6.8+ of project \verb+SIM_TIPS_Simulator+. As explained above \verb+E-Run+ will look for the project starting from the path defined in the environment variable \verb+$EUCLIDPROJECTPATH+, which is mounted on the LODEEN environment on the \verb+cvmfs+ filesystem. On EDEN-2.0 this path is
-
-\begin{verbatim}
-/cvmfs/euclid-dev.in2p3.fr/CentOS7/EDEN-2.0/opt/euclid
-\end{verbatim}
+The \verb+<project_version>+ argument (here \verb+4.6.8+) is optional. If it is passed, the \verb+E-Run+ command will look for that version of the requested project. In the above example we are therefore requesting to run version \verb+4.6.8+ of project \verb+SIM_TIPS_Simulator+. 
